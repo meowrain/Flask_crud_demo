@@ -1,4 +1,4 @@
-from flask import Flask,render_template,jsonify,request,redirect,url_for
+from flask import Flask,render_template,jsonify,request,redirect,url_for,make_response
 app = Flask(__name__)
 
 DATA_DICT = {
@@ -13,6 +13,9 @@ def login():
     user = request.form.get('user')
     password = request.form.get('password')
     if user == 'meowrain' and password == 'yyds':
+        resp = make_response("<h2>Cookie</h2>")
+        resp.set_cookie('username',user,domain='127.0.0.1:7890')
+        resp.set_cookie('password',password,domain='127.0.0.1:7890')
         return redirect('/index')
     else:
         msg_err = '用户名或者密码错误'
@@ -50,6 +53,12 @@ def add_users():
     DATA_DICT[new_id] = {'name':user,'age':age}
     return redirect(url_for('idx'))
 
-
+@app.route('/cookie',methods=['GET'])
+def cookie():
+    resp = make_response("<h2>Cookie</h2>")
+    resp = make_response("<h2>Cookie</h2>")
+    resp.set_cookie('username','meowrain',domain='127.0.0.1:7890')
+    resp.set_cookie('password','yyds',domain='127.0.0.1:7890')
+    return resp
 if __name__ == '__main__':
     app.run(debug=True)
