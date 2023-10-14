@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+{% for key,value in datas.items() %}
+   <tr>
+    <td>{{key}}</td>
+    <td>{{value.name}}</td>
+    <td>{{value.age}}</td>
+   </tr>
+{% endfor %}
+{% endblock content %}

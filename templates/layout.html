@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if title %}
+        <title>Flask blog - {{ title }}</title>
+        {% else %}
+        <title>Flask blog</title>
+        {% endif %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333333;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        p {
+            color: #666666;
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.5;
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        img {
+            display: block;
+            margin: 50px auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        a {
+            color: #336699;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <h1>用户列表</h1>
+<div class="container">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>年龄</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key,value in datas.items() %}
+                <tr>
+                    <td>{{key}}</td>
+                    <td>{{value.name}}</td>
+                    <td>{{value.age}}</td>
+                    <td>
+                        <a href="/edit/{{key}}">编辑</a>
+                        <a href="/delete/{{key}}">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/add_users">添加</a>
+    <span style="color:red">用户条数为：{{length}}</span>
+    
+</div>
+
+    <p>感谢你访问我们的页面！希望你喜欢这个简单的示例。</p>
+</body>
+
+</html>
