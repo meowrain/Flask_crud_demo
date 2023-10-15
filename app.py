@@ -1,10 +1,21 @@
-from flask import Flask,render_template,jsonify,request,redirect,url_for,make_response
+from flask_project import Flask,render_template,jsonify,request,redirect,url_for,make_response,session
+import functools
 app = Flask(__name__)
 
 DATA_DICT = {
     '1': {'name': 'meowrain',"age":73},
     '2': {'name': 'meow',"age":84}
 }
+app.secret_key = 'sdfsfd'
+
+def auth(func):
+    @functools.wraps(func)
+    def inner(*args,**kwargs):
+        if not session.get('user'):
+            return redirect(url_for('login'))
+        return func(*args,**kwargs)
+    return inner
+
 
 @app.route('/login',methods=['GET','POST'])
 def login():
@@ -13,6 +24,8 @@ def login():
     user = request.form.get('user')
     password = request.form.get('password')
     if user == 'meowrain' and password == 'yyds':
+        session['user'] = user
+        session['password'] = password
         resp = make_response("<h2>Cookie</h2>")
         resp.set_cookie('username',user,domain='127.0.0.1:7890')
         resp.set_cookie('password',password,domain='127.0.0.1:7890')
@@ -22,12 +35,14 @@ def login():
         return render_template('login.html',msg_err=msg_err)
 
 @app.route('/index',endpoint='idx')
+@auth
 def index():
     data_dict = DATA_DICT
     length = len(data_dict)
     return render_template('layout.html',datas=data_dict,length=length)
 
 @app.route('/edit/<nid>',methods=['GET','POST'])
+@auth
 def edit(nid):
     if request.method== 'GET':
         info = DATA_DICT[str(nid)]
@@ -39,11 +54,13 @@ def edit(nid):
     return redirect(url_for('idx'))
 
 @app.route('/delete/<nid>')
+@auth
 def delete(nid):
    del DATA_DICT[nid]
    return redirect(url_for('idx'))
 
 @app.route('/add_users',methods=['GET','POST'])
+@auth
 def add_users():
     if request.method == 'GET':
         return render_template('add.html')
